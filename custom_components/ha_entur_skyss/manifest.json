@@ -1,0 +1,10 @@
+{
+  "domain": "ha_entur_skyss",
+  "name": "Entur Skyss",
+  "codeowners": ["@Trodah"],
+  "config_flow": true,
+  "documentation": "https://github.com/Trodah/ha-entur-skyss",
+  "iot_class": "cloud_polling",
+  "requirements": ["aiohttp"],
+  "version": "0.1.0"
+}
