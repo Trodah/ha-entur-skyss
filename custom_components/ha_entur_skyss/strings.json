@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Legg til stoppested",
+        "description": "Finn stopp-ID på [Entur](https://entur.no) eller bruk NSR-ID (f.eks. NSR:StopPlace:62356).",
+        "data": {
+          "stop_id": "Stopp-ID (NSR:StopPlace:XXXXX)",
+          "stop_name": "Visningsnavn (valgfritt)",
+          "max_departures": "Antall avganger å vise"
+        }
+      }
+    },
+    "error": {
+      "invalid_stop_id": "Ugyldig stopp-ID. Sjekk at ID-en starter med NSR:StopPlace:",
+      "cannot_connect": "Kan ikke koble til Entur API. Prøv igjen.",
+      "stop_not_found": "Fant ikke stoppested med denne ID-en."
+    },
+    "abort": {
+      "already_configured": "Dette stoppestedet er allerede lagt til."
+    }
+  }
+}

@@ -11,33 +11,39 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
+    API_URL,
+    CLIENT_NAME,
     CONF_MAX_DEPARTURES,
     CONF_STOP_ID,
     CONF_STOP_NAME,
     DEFAULT_MAX_DEPARTURES,
     DOMAIN,
-    GEOCODER_URL,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
+VALIDATE_QUERY = '{ stopPlace(id: "%s") { name } }'
 
-async def lookup_stop(stop_id: str) -> str | None:
-    """Look up stop name from Entur geocoder."""
-    headers = {"ET-Client-Name": "privatperson-ha-entur-skyss"}
+
+async def validate_stop_id(stop_id: str) -> str | None:
+    """Validate stop ID via Journey Planner API and return stop name, or None if not found."""
+    headers = {
+        "Content-Type": "application/json",
+        "ET-Client-Name": CLIENT_NAME,
+    }
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(
-                GEOCODER_URL,
-                params={"text": stop_id, "lang": "no", "size": 1, "layers": "venue"},
+            async with session.post(
+                API_URL,
+                json={"query": VALIDATE_QUERY % stop_id},
                 headers=headers,
             ) as resp:
                 if resp.status != 200:
                     return None
                 data = await resp.json()
-                features = data.get("features", [])
-                if features:
-                    return features[0]["properties"].get("label")
+                stop = data.get("data", {}).get("stopPlace")
+                if stop:
+                    return stop.get("name")
     except aiohttp.ClientError:
         return None
     return None
@@ -57,24 +63,32 @@ class EnturSkyssConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             stop_id = user_input[CONF_STOP_ID].strip()
 
-            # Look up stop name if not provided
-            stop_name = user_input.get(CONF_STOP_NAME, "").strip()
-            if not stop_name:
-                stop_name = await lookup_stop(stop_id) or stop_id
+            if not stop_id.startswith("NSR:StopPlace:"):
+                errors[CONF_STOP_ID] = "invalid_stop_id"
+            else:
+                try:
+                    api_name = await validate_stop_id(stop_id)
+                except Exception:  # noqa: BLE001
+                    errors["base"] = "cannot_connect"
+                else:
+                    if api_name is None:
+                        errors[CONF_STOP_ID] = "stop_not_found"
+                    else:
+                        stop_name = user_input.get(CONF_STOP_NAME, "").strip() or api_name
 
-            await self.async_set_unique_id(stop_id)
-            self._abort_if_unique_id_configured()
+                        await self.async_set_unique_id(stop_id)
+                        self._abort_if_unique_id_configured()
 
-            return self.async_create_entry(
-                title=stop_name,
-                data={
-                    CONF_STOP_ID: stop_id,
-                    CONF_STOP_NAME: stop_name,
-                    CONF_MAX_DEPARTURES: user_input.get(
-                        CONF_MAX_DEPARTURES, DEFAULT_MAX_DEPARTURES
-                    ),
-                },
-            )
+                        return self.async_create_entry(
+                            title=stop_name,
+                            data={
+                                CONF_STOP_ID: stop_id,
+                                CONF_STOP_NAME: stop_name,
+                                CONF_MAX_DEPARTURES: user_input.get(
+                                    CONF_MAX_DEPARTURES, DEFAULT_MAX_DEPARTURES
+                                ),
+                            },
+                        )
 
         schema = vol.Schema(
             {
