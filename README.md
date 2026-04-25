@@ -8,10 +8,6 @@
 
 A [Home Assistant](https://www.home-assistant.io/) custom integration that fetches **real-time bus departures** from [Entur](https://entur.no) for stops served by [Skyss](https://www.skyss.no) in the Bergen region — installable via [HACS](https://hacs.xyz).
 
-### Screenshot
-
-![Dashboard card](custom_components/ha_entur_skyss/docs/markdown_kort1.png)
-
 ### Features
 
 - Real-time departures from any Entur stop (NSR stop ID)
@@ -60,9 +56,13 @@ All three work great together!
 #### Finding your stop ID
 Look up your stop at [entur.no](https://entur.no) or search at [stoppested.entur.org](https://stoppested.entur.org). The NSR ID always starts with `NSR:StopPlace:`.
 
-### Dashboard card
+### Dashboard cards
 
-Add a Markdown card with this YAML to display departures as a table:
+Replace the entity ID with your own (find it under **Developer Tools → States**).
+
+#### Markdown table card
+
+![Markdown card](custom_components/ha_entur_skyss/docs/dashboard_markdown_card.png)
 
 ```yaml
 type: markdown
@@ -76,17 +76,64 @@ content: |
   {% endfor %}
 ```
 
-Replace `sensor.entur_bergen_busstasjon` with your sensor entity ID (find it under **Developer Tools → States**).
+#### Mushroom badge
+
+Compact badge showing the next departure. Color changes automatically: teal (> 5 min), orange (2–5 min), red (< 2 min).
+
+![Mushroom badge](custom_components/ha_entur_skyss/docs/dashboard_badge.png)
+
+Requires [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (available in HACS).
+
+```yaml
+type: custom:mushroom-template-badge
+icon: mdi:bus
+color: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}
+    {% set m = d[0].minutes %}
+    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
+  {% endif %}
+label: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}Linje {{ d[0].line }}{% endif %}
+content: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}{{ d[0].minutes }} min{% endif %}
+```
+
+#### Mushroom template card
+
+Shows the next two departures with color indicator.
+
+![Mushroom card](custom_components/ha_entur_skyss/docs/dashboard_card.png)
+
+Requires [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (available in HACS).
+
+```yaml
+type: custom:mushroom-template-card
+entity: sensor.entur_dolvikhaugene
+primary: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}Linje {{ d[0].line }} → {{ d[0].destination }}{% endif %}
+secondary: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d and d|length > 1 %}
+    {{ d[0].minutes }} min · Neste: linje {{ d[1].line }} om {{ d[1].minutes }} min
+  {% endif %}
+icon: mdi:bus-clock
+icon_color: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}
+    {% set m = d[0].minutes %}
+    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
+  {% endif %}
+```
 
 ---
 
 ## 🇳🇴 Norsk
 
 En tilpasset [Home Assistant](https://www.home-assistant.io/)-integrasjon som henter **sanntidsavganger** fra [Entur](https://entur.no) for stoppesteder betjent av [Skyss](https://www.skyss.no) i Bergensregionen — installerbar via [HACS](https://hacs.xyz).
-
-### Skjermbilde
-
-![Dashboard-kort](custom_components/ha_entur_skyss/docs/markdown_kort1.png)
 
 ### Funksjoner
 
@@ -138,7 +185,11 @@ Søk opp stoppestedet ditt på [entur.no](https://entur.no) eller på [stoppeste
 
 ### Dashboard-kort
 
-Legg til et Markdown-kort med denne YAML-koden for å vise avganger som en tabell:
+Bytt ut entitets-ID-en med din egen (finn den under **Utviklerverktøy → Tilstander**).
+
+#### Markdown-tabell
+
+![Markdown-kort](custom_components/ha_entur_skyss/docs/dashboard_markdown_card.png)
 
 ```yaml
 type: markdown
@@ -152,7 +203,58 @@ content: |
   {% endfor %}
 ```
 
-Bytt ut `sensor.entur_bergen_busstasjon` med din sensors entitets-ID (finn den under **Utviklerverktøy → Tilstander**).
+#### Mushroom badge
+
+Kompakt badge som viser neste avgang. Fargen skifter automatisk: teal (> 5 min), oransje (2–5 min), rød (< 2 min).
+
+![Mushroom badge](custom_components/ha_entur_skyss/docs/dashboard_badge.png)
+
+Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjengelig i HACS).
+
+```yaml
+type: custom:mushroom-template-badge
+icon: mdi:bus
+color: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}
+    {% set m = d[0].minutes %}
+    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
+  {% endif %}
+label: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}Linje {{ d[0].line }}{% endif %}
+content: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}{{ d[0].minutes }} min{% endif %}
+```
+
+#### Mushroom template-kort
+
+Viser de neste to avgangene med fargeindikator.
+
+![Mushroom-kort](custom_components/ha_entur_skyss/docs/dashboard_card.png)
+
+Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjengelig i HACS).
+
+```yaml
+type: custom:mushroom-template-card
+entity: sensor.entur_dolvikhaugene
+primary: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}Linje {{ d[0].line }} → {{ d[0].destination }}{% endif %}
+secondary: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d and d|length > 1 %}
+    {{ d[0].minutes }} min · Neste: linje {{ d[1].line }} om {{ d[1].minutes }} min
+  {% endif %}
+icon: mdi:bus-clock
+icon_color: >
+  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% if d %}
+    {% set m = d[0].minutes %}
+    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
+  {% endif %}
+```
 
 ---
 
