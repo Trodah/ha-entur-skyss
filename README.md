@@ -21,8 +21,12 @@ A [Home Assistant](https://www.home-assistant.io/) custom integration that fetch
 - Updates every 45 seconds (as recommended by Entur)
 - Supports multiple stops — add as many as you need
 
-### Complementary integration
+### Related integrations
 
+#### Official HA Entur integration
+Home Assistant has a [built-in Entur integration](https://www.home-assistant.io/integrations/entur_public_transport), but it is marked as **Legacy** and must be configured via `configuration.yaml`. This integration offers a modern UI-based setup via the integrations page and is installable through HACS.
+
+#### ha-entur_sx by DTekNO
 This integration is **not** the same as [ha-entur_sx by DTekNO](https://github.com/DTekNO/ha-entur_sx). They serve different purposes:
 
 | | ha-entur_sx (DTekNO) | ha-entur-skyss (this) |
@@ -31,7 +35,7 @@ This integration is **not** the same as [ha-entur_sx by DTekNO](https://github.c
 | **API** | SIRI-SX (Situation Exchange) | Journey Planner GraphQL |
 | **Use case** | "Is my bus cancelled?" | "When does the next bus leave?" |
 
-They work great together!
+All three work great together!
 
 ### Installation
 
@@ -93,8 +97,12 @@ En tilpasset [Home Assistant](https://www.home-assistant.io/)-integrasjon som he
 - Oppdateres hvert 45. sekund (anbefalt av Entur)
 - Støtter flere stoppesteder — legg til så mange du vil
 
-### Komplementær integrasjon
+### Relaterte integrasjoner
 
+#### Offisiell HA Entur-integrasjon
+Home Assistant har en [innebygd Entur-integrasjon](https://www.home-assistant.io/integrations/entur_public_transport), men den er merket som **Legacy** og må konfigureres via `configuration.yaml`. Denne integrasjonen tilbyr moderne UI-oppsett via integrasjonssiden og kan installeres via HACS.
+
+#### ha-entur_sx av DTekNO
 Denne integrasjonen er **ikke** det samme som [ha-entur_sx av DTekNO](https://github.com/DTekNO/ha-entur_sx). De dekker ulike behov:
 
 | | ha-entur_sx (DTekNO) | ha-entur-skyss (denne) |
@@ -103,7 +111,7 @@ Denne integrasjonen er **ikke** det samme som [ha-entur_sx av DTekNO](https://gi
 | **API** | SIRI-SX (Situation Exchange) | Journey Planner GraphQL |
 | **Bruksområde** | "Er bussen innstilt?" | "Når går neste buss?" |
 
-De fungerer utmerket sammen!
+Alle tre fungerer utmerket sammen!
 
 ### Installasjon
 
