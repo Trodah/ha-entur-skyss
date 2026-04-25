@@ -129,6 +129,8 @@ icon_color: >
   {% endif %}
 ```
 
+<br><br>
+
 ---
 
 ## 🇳🇴 Norsk
