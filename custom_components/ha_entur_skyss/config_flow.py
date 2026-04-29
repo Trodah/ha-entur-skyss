@@ -22,11 +22,25 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-VALIDATE_QUERY = '{ stopPlace(id: "%s") { name } }'
+VALIDATE_QUERY_STOP = '{ stopPlace(id: "%s") { name } }'
+VALIDATE_QUERY_QUAY = '{ quay(id: "%s") { name } }'
+
+VALID_PREFIXES = ("NSR:StopPlace:", "NSR:Quay:", "SKY:Quay:")
+
+
+def _is_quay_id(stop_id: str) -> bool:
+    return ":Quay:" in stop_id
 
 
 async def validate_stop_id(stop_id: str) -> str | None:
-    """Validate stop ID via Journey Planner API and return stop name, or None if not found."""
+    """Validate stop/quay ID via Journey Planner API and return name, or None if not found."""
+    if _is_quay_id(stop_id):
+        query = VALIDATE_QUERY_QUAY % stop_id
+        data_key = "quay"
+    else:
+        query = VALIDATE_QUERY_STOP % stop_id
+        data_key = "stopPlace"
+
     headers = {
         "Content-Type": "application/json",
         "ET-Client-Name": CLIENT_NAME,
@@ -35,13 +49,13 @@ async def validate_stop_id(stop_id: str) -> str | None:
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 API_URL,
-                json={"query": VALIDATE_QUERY % stop_id},
+                json={"query": query},
                 headers=headers,
             ) as resp:
                 if resp.status != 200:
                     return None
                 data = await resp.json()
-                stop = data.get("data", {}).get("stopPlace")
+                stop = data.get("data", {}).get(data_key)
                 if stop:
                     return stop.get("name")
     except aiohttp.ClientError:
@@ -63,7 +77,7 @@ class EnturSkyssConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             stop_id = user_input[CONF_STOP_ID].strip()
 
-            if not stop_id.startswith("NSR:StopPlace:"):
+            if not any(stop_id.startswith(p) for p in VALID_PREFIXES):
                 errors[CONF_STOP_ID] = "invalid_stop_id"
             else:
                 try:

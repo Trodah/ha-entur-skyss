@@ -2,17 +2,17 @@
   "config": {
     "step": {
       "user": {
-        "title": "Add stop",
-        "description": "Find your stop ID at [Entur](https://entur.no) or use the NSR ID directly (e.g. NSR:StopPlace:62356).",
+        "title": "Add stop or quay",
+        "description": "Use an NSR stop ID (e.g. NSR:StopPlace:62356) for all platforms, or a specific quay ID (e.g. NSR:Quay:53118 or SKY:Quay:12010204).",
         "data": {
-          "stop_id": "Stop ID (NSR:StopPlace:XXXXX)",
+          "stop_id": "Stop or quay ID",
           "stop_name": "Display name (optional)",
           "max_departures": "Number of departures to show"
         }
       }
     },
     "error": {
-      "invalid_stop_id": "Invalid stop ID. Make sure it starts with NSR:StopPlace:",
+      "invalid_stop_id": "Invalid ID. Must start with NSR:StopPlace:, NSR:Quay: or SKY:Quay:",
       "cannot_connect": "Cannot connect to Entur API. Please try again.",
       "stop_not_found": "No stop found with this ID."
     },

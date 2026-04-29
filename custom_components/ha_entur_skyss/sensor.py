@@ -27,7 +27,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(seconds=SCAN_INTERVAL_SECONDS)
 
-GRAPHQL_QUERY = """
+GRAPHQL_QUERY_STOP = """
 {
   stopPlace(id: "%s") {
     id
@@ -45,6 +45,29 @@ GRAPHQL_QUERY = """
   }
 }
 """
+
+GRAPHQL_QUERY_QUAY = """
+{
+  quay(id: "%s") {
+    id
+    name
+    estimatedCalls(numberOfDepartures: %d) {
+      expectedDepartureTime
+      destinationDisplay { frontText }
+      serviceJourney {
+        line {
+          publicCode
+          transportMode
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _is_quay_id(stop_id: str) -> bool:
+    return ":Quay:" in stop_id
 
 
 async def async_setup_entry(
@@ -93,7 +116,12 @@ class EnturSkysSensor(SensorEntity):
 
     async def async_update(self) -> None:
         """Fetch new data from Entur API."""
-        query = GRAPHQL_QUERY % (self._stop_id, self._max_departures)
+        if _is_quay_id(self._stop_id):
+            query = GRAPHQL_QUERY_QUAY % (self._stop_id, self._max_departures)
+            data_key = "quay"
+        else:
+            query = GRAPHQL_QUERY_STOP % (self._stop_id, self._max_departures)
+            data_key = "stopPlace"
         headers = {
             "Content-Type": "application/json",
             "ET-Client-Name": CLIENT_NAME,
@@ -110,7 +138,7 @@ class EnturSkysSensor(SensorEntity):
 
                     data = await resp.json()
 
-            stop = data.get("data", {}).get("stopPlace")
+            stop = data.get("data", {}).get(data_key)
             if not stop:
                 _LOGGER.warning("No stop data for %s", self._stop_id)
                 return

@@ -2,17 +2,17 @@
   "config": {
     "step": {
       "user": {
-        "title": "Legg til stoppested",
-        "description": "Finn stopp-ID på [Entur](https://entur.no) eller bruk NSR-ID (f.eks. NSR:StopPlace:62356).",
+        "title": "Legg til stoppested eller quay",
+        "description": "Bruk NSR-ID for hele stoppet (f.eks. NSR:StopPlace:62356) eller en spesifikk plattform (f.eks. NSR:Quay:53118 eller SKY:Quay:12010204).",
         "data": {
-          "stop_id": "Stopp-ID (NSR:StopPlace:XXXXX)",
+          "stop_id": "Stopp- eller quay-ID",
           "stop_name": "Visningsnavn (valgfritt)",
           "max_departures": "Antall avganger å vise"
         }
       }
     },
     "error": {
-      "invalid_stop_id": "Ugyldig stopp-ID. Sjekk at ID-en starter med NSR:StopPlace:",
+      "invalid_stop_id": "Ugyldig ID. Må starte med NSR:StopPlace:, NSR:Quay: eller SKY:Quay:",
       "cannot_connect": "Kan ikke koble til Entur API. Prøv igjen.",
       "stop_not_found": "Fant ikke stoppested med denne ID-en."
     },
