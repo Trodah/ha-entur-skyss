@@ -104,16 +104,16 @@ Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjenge
 type: custom:mushroom-template-badge
 icon: mdi:bus
 color: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}
     {% set m = d[0].minutes %}
     {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
   {% endif %}
 label: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}Linje {{ d[0].line }}{% endif %}
 content: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}{{ d[0].minutes }} min{% endif %}
 ```
 
@@ -127,18 +127,18 @@ Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjenge
 
 ```yaml
 type: custom:mushroom-template-card
-entity: sensor.entur_dolvikhaugene
+entity: sensor.entur_bergen_busstasjon
 primary: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}Linje {{ d[0].line }} → {{ d[0].destination }}{% endif %}
 secondary: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d and d|length > 1 %}
     {{ d[0].minutes }} min · Neste: linje {{ d[1].line }} om {{ d[1].minutes }} min
   {% endif %}
 icon: mdi:bus-clock
 icon_color: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}
     {% set m = d[0].minutes %}
     {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
@@ -247,16 +247,16 @@ Requires [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (availab
 type: custom:mushroom-template-badge
 icon: mdi:bus
 color: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}
     {% set m = d[0].minutes %}
     {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
   {% endif %}
 label: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}Linje {{ d[0].line }}{% endif %}
 content: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}{{ d[0].minutes }} min{% endif %}
 ```
 
@@ -270,18 +270,18 @@ Requires [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (availab
 
 ```yaml
 type: custom:mushroom-template-card
-entity: sensor.entur_dolvikhaugene
+entity: sensor.entur_bergen_busstasjon
 primary: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}Linje {{ d[0].line }} → {{ d[0].destination }}{% endif %}
 secondary: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d and d|length > 1 %}
     {{ d[0].minutes }} min · Neste: linje {{ d[1].line }} om {{ d[1].minutes }} min
   {% endif %}
 icon: mdi:bus-clock
 icon_color: >
-  {% set d = state_attr('sensor.entur_dolvikhaugene', 'departures') %}
+  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
   {% if d %}
     {% set m = d[0].minutes %}
     {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
