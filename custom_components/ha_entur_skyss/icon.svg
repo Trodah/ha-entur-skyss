@@ -1,21 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <!-- Background circle, Entur dark navy -->
-  <circle cx="128" cy="128" r="128" fill="#1A1770"/>
-
-  <!-- Wheels (drawn before body so body overlaps top half of wheel) -->
-  <circle cx="84" cy="164" r="24" fill="#0C0E3A"/>
-  <circle cx="84" cy="164" r="10" fill="#2E3785"/>
-  <circle cx="172" cy="164" r="24" fill="#0C0E3A"/>
-  <circle cx="172" cy="164" r="10" fill="#2E3785"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="208" rx="52" ry="10" fill="#b0b8d0" opacity="0.45"/>
 
   <!-- Bus body -->
-  <rect x="36" y="78" width="184" height="88" rx="14" fill="white"/>
+  <rect x="28" y="38" width="144" height="148" rx="22" ry="22" fill="#0047BB"/>
 
-  <!-- Coral accent stripe -->
-  <rect x="36" y="130" width="184" height="11" fill="#F55A2B"/>
+  <!-- Roof bump -->
+  <rect x="48" y="28" width="104" height="28" rx="14" ry="14" fill="#0047BB"/>
 
-  <!-- Windows -->
-  <rect x="54"  y="92" width="40" height="30" rx="6" fill="#1A1770"/>
-  <rect x="108" y="92" width="40" height="30" rx="6" fill="#1A1770"/>
-  <rect x="162" y="92" width="40" height="30" rx="6" fill="#1A1770"/>
+  <!-- Destination sign (yellow) -->
+  <rect x="72" y="33" width="56" height="12" rx="4" fill="#FFD700"/>
+
+  <!-- Windscreen dark -->
+  <rect x="40" y="52" width="120" height="80" rx="14" ry="14" fill="#0d1a3a"/>
+
+  <!-- Windscreen shine -->
+  <rect x="44" y="56" width="112" height="72" rx="12" ry="12" fill="#0d1a3a"/>
+
+  <!-- Subtle glass sheen -->
+  <rect x="44" y="56" width="112" height="18" rx="12" ry="4" fill="white" opacity="0.06"/>
+
+  <!-- Side mirrors -->
+  <rect x="10" y="68" width="20" height="26" rx="5" fill="#003399"/>
+  <rect x="170" y="68" width="20" height="26" rx="5" fill="#003399"/>
+
+  <!-- Front bumper / lower body -->
+  <rect x="28" y="165" width="144" height="24" rx="6" fill="#002a80"/>
+
+  <!-- Headlights -->
+  <circle cx="62" cy="158" r="12" fill="#e8c97a"/>
+  <circle cx="62" cy="158" r="8" fill="#f5dfa0"/>
+  <circle cx="138" cy="158" r="12" fill="#e8c97a"/>
+  <circle cx="138" cy="158" r="8" fill="#f5dfa0"/>
+
+  <!-- Front grille / lower strip -->
+  <rect x="76" y="170" width="48" height="8" rx="4" fill="#001f6e"/>
+
+  <!-- Wheels (just the bottom bit visible) -->
+  <rect x="36" y="182" width="30" height="18" rx="9" fill="#0d1a3a"/>
+  <rect x="134" y="182" width="30" height="18" rx="9" fill="#0d1a3a"/>
+
+  <!-- White DRL accent lines -->
+  <path d="M50 148 Q70 138 88 142" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M150 148 Q130 138 112 142" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.85"/>
 </svg>
