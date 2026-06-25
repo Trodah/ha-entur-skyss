@@ -6,9 +6,7 @@
 
 ## 🇳🇴 Norsk
 
-Jeg er en enkel HA-entusiast som lenge har tenkt at en integrasjon med bussavganger hadde vært nyttig — for eksempel på et dashboard eller eksponert til en taleassistent. Claude har hjulpet meg veldig med denne, jeg er likevel stolt av å ha laget integrasjonen — og kanskje kan det inspirere til å ta bussen og la bilen stå? Eventuelt ende opp som en Homelab-entusiast (Gud ha barmhjertighet).
-
-En tilpasset [Home Assistant](https://www.home-assistant.io/)-integrasjon som henter **sanntidsavganger** fra [Entur](https://entur.no) for stoppesteder betjent av [Skyss](https://www.skyss.no) — installerbar via [HACS](https://hacs.xyz). Fungerer med alle Entur-stoppesteder i Norge, men er utviklet og testet med Skyss i Bergensregionen.
+Home Assistant-integrasjon for sanntidsavganger via [Entur](https://entur.no) sitt API. Utviklet og testet med [Skyss](https://www.skyss.no) i Bergen, men fungerer med alle norske stoppesteder i Entur-nettverket.
 
 ### Funksjoner
 
@@ -23,7 +21,7 @@ En tilpasset [Home Assistant](https://www.home-assistant.io/)-integrasjon som he
 ### Relaterte integrasjoner
 
 #### Offisiell HA Entur-integrasjon
-Home Assistant har en [innebygd Entur-integrasjon](https://www.home-assistant.io/integrations/entur_public_transport), men den er merket som **Legacy** og må konfigureres via `configuration.yaml`. Denne integrasjonen tilbyr moderne UI-oppsett via integrasjonssiden og kan installeres via HACS.
+HA har en [innebygd Entur-integrasjon](https://www.home-assistant.io/integrations/entur_public_transport), men den er **Legacy** og krever `configuration.yaml`. Denne bruker moderne UI og er installerbar via HACS.
 
 #### ha-entur_sx av DTekNO
 Denne integrasjonen er **ikke** det samme som [ha-entur_sx av DTekNO](https://github.com/DTekNO/ha-entur_sx). De dekker ulike behov:
@@ -40,10 +38,8 @@ Alle tre fungerer utmerket sammen!
 
 #### HACS (anbefalt)
 1. Åpne HACS i Home Assistant
-2. Gå til **Integrasjoner → Egendefinerte pakkelagre**
-3. Legg til `https://github.com/Trodah/ha-entur-skyss` som en **Integrasjon**
-4. Søk etter **Entur Skyss** og installer
-5. Start Home Assistant på nytt
+2. Søk etter **Entur Skyss** under Integrasjoner
+3. Installer og start Home Assistant på nytt
 
 #### Manuell installasjon
 1. Last ned dette repoet som ZIP
@@ -149,9 +145,7 @@ icon_color: >
 
 ## 🇬🇧 English
 
-A [Home Assistant](https://www.home-assistant.io/) custom integration that fetches **real-time bus departures** from [Entur](https://entur.no) — developed and tested for [Skyss](https://www.skyss.no) in the Bergen region, but works with any Norwegian stop in the Entur network. Installable via [HACS](https://hacs.xyz).
-
-Built with the help of Claude (AI).
+Home Assistant integration for real-time departures via the [Entur](https://entur.no) API. Developed and tested with [Skyss](https://www.skyss.no) in Bergen, but works with any Norwegian stop in the Entur network.
 
 ### Features
 
@@ -166,7 +160,7 @@ Built with the help of Claude (AI).
 ### Related integrations
 
 #### Official HA Entur integration
-Home Assistant has a [built-in Entur integration](https://www.home-assistant.io/integrations/entur_public_transport), but it is marked as **Legacy** and must be configured via `configuration.yaml`. This integration offers a modern UI-based setup via the integrations page and is installable through HACS.
+HA has a [built-in Entur integration](https://www.home-assistant.io/integrations/entur_public_transport), but it is **Legacy** and requires `configuration.yaml`. This one uses a modern UI and is installable via HACS.
 
 #### ha-entur_sx by DTekNO
 This integration is **not** the same as [ha-entur_sx by DTekNO](https://github.com/DTekNO/ha-entur_sx). They serve different purposes:
@@ -183,10 +177,8 @@ All three work great together!
 
 #### HACS (recommended)
 1. Open HACS in Home Assistant
-2. Go to **Integrations → Custom repositories**
-3. Add `https://github.com/Trodah/ha-entur-skyss` as an **Integration**
-4. Search for **Entur Skyss** and install
-5. Restart Home Assistant
+2. Search for **Entur Skyss** under Integrations
+3. Install and restart Home Assistant
 
 #### Manual
 1. Download this repository as a ZIP
