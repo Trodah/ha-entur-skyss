@@ -19,5 +19,17 @@
     "abort": {
       "already_configured": "Dette stoppestedet er allerede lagt til."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Endre innstillinger",
+        "description": "Oppdater visningsnavn eller antall avganger for dette stoppestedet. Stopp-ID kan ikke endres her — legg til en ny integrasjon for å overvåke et annet stoppested.",
+        "data": {
+          "stop_name": "Visningsnavn (valgfritt)",
+          "max_departures": "Antall avganger å vise"
+        }
+      }
+    }
   }
 }

@@ -77,8 +77,13 @@ async def async_setup_entry(
 ) -> None:
     """Set up Entur Skyss sensor from config entry."""
     stop_id = entry.data[CONF_STOP_ID]
-    stop_name = entry.data.get(CONF_STOP_NAME, stop_id)
-    max_departures = entry.data.get(CONF_MAX_DEPARTURES, DEFAULT_MAX_DEPARTURES)
+    stop_name = entry.options.get(
+        CONF_STOP_NAME, entry.data.get(CONF_STOP_NAME, stop_id)
+    )
+    max_departures = entry.options.get(
+        CONF_MAX_DEPARTURES,
+        entry.data.get(CONF_MAX_DEPARTURES, DEFAULT_MAX_DEPARTURES),
+    )
 
     async_add_entities(
         [EnturSkysSensor(stop_id, stop_name, max_departures)],

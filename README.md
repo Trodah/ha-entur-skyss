@@ -1,150 +1,5 @@
 # ha-entur-skyss
 
-> 🇳🇴 Norsk versjon / 🇬🇧 English below
-
----
-
-## 🇳🇴 Norsk
-
-Home Assistant-integrasjon for sanntidsavganger via [Entur](https://entur.no) sitt API. Utviklet og testet med [Skyss](https://www.skyss.no) i Bergen, men fungerer med alle norske stoppesteder i Entur-nettverket.
-
-### Funksjoner
-
-- Sanntidsavganger fra alle Entur-stoppesteder (NSR stopp-ID)
-- Støtte for både hele stoppesteder (`NSR:StopPlace:`) og enkeltplattformer (`NSR:Quay:`, `SKY:Quay:`)
-- Viser linjenummer, destinasjon og minutter til avgang
-- Valgfritt antall avganger (1–20)
-- Henter stoppestedsnavn automatisk fra Entur API
-- Oppdateres hvert 45. sekund (anbefalt av Entur)
-- Støtter flere stoppesteder — legg til så mange du vil
-
-### Relaterte integrasjoner
-
-#### Offisiell HA Entur-integrasjon
-HA har en [innebygd Entur-integrasjon](https://www.home-assistant.io/integrations/entur_public_transport), men den er **Legacy** og krever `configuration.yaml`. Denne bruker moderne UI og er installerbar via HACS.
-
-#### ha-entur_sx av DTekNO
-Denne integrasjonen er **ikke** det samme som [ha-entur_sx av DTekNO](https://github.com/DTekNO/ha-entur_sx). De dekker ulike behov:
-
-| | ha-entur_sx (DTekNO) | ha-entur-skyss (denne) |
-|---|---|---|
-| **Hva** | Varsler om innstillinger og forsinkelser | Neste avganger fra stoppested |
-| **API** | SIRI-SX (Situation Exchange) | Journey Planner GraphQL |
-| **Bruksområde** | "Er bussen innstilt?" | "Når går neste buss?" |
-
-Alle tre fungerer utmerket sammen!
-
-### Installasjon
-
-#### HACS (anbefalt)
-1. Åpne HACS i Home Assistant
-2. Søk etter **Entur Skyss** under Integrasjoner
-3. Installer og start Home Assistant på nytt
-
-#### Manuell installasjon
-1. Last ned dette repoet som ZIP
-2. Pakk ut og kopier mappen `custom_components/ha_entur_skyss/` til `config/custom_components/` på din HA-instans
-3. Start Home Assistant på nytt
-
-### Konfigurasjon
-
-1. Gå til **Innstillinger → Enheter og tjenester → Legg til integrasjon**
-2. Søk etter **Entur Skyss**
-3. Skriv inn stopp-ID for ønsket stoppested eller plattform
-
-Gyldige ID-formater:
-
-| Format | Eksempel | Beskrivelse |
-|--------|---------|-------------|
-| `NSR:StopPlace:XXXXX` | `NSR:StopPlace:62356` | Hele stoppet — alle avganger fra alle plattformer |
-| `NSR:Quay:XXXXX` | `NSR:Quay:53118` | Én spesifikk plattform (nasjonal ID) |
-| `SKY:Quay:XXXXXXXX` | `SKY:Quay:12010204` | Én spesifikk plattform (Skyss-ID) |
-
-> **Tips:** Stopp med plattformer i flere retninger (f.eks. J, G og H) returnerer avganger fra alle retninger når du bruker `NSR:StopPlace:`. Bruk en quay-ID for å filtrere på én retning.
-
-#### Finn din stopp-ID
-
-**Hele stoppesteder** finner du på [entur.no](https://entur.no) eller [stoppested.entur.org](https://stoppested.entur.org). NSR-ID-en starter alltid med `NSR:StopPlace:`.
-
-**Plattform-IDer (quay)** finner du ved å søke opp stoppestedet på [stoppested.entur.org](https://stoppested.entur.org), velge riktig plattform og kopiere quay-ID-en (starter med `NSR:Quay:` eller `SKY:Quay:`).
-
-### Dashboard-kort
-
-Bytt ut entitets-ID-en med din egen (finn den under **Utviklerverktøy → Tilstander**).
-
-#### Markdown-tabell
-
-![Markdown-kort](custom_components/ha_entur_skyss/docs/dashboard_markdown_card.png)
-
-```yaml
-type: markdown
-title: 🚌 Avganger
-content: |
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  | Linje | Destinasjon | Avgang |
-  |-------|-------------|--------|
-  {% for a in d -%}
-  | **{{ a.line }}** | {{ a.destination }} | {{ a.minutes }} min |
-  {% endfor %}
-```
-
-#### Mushroom badge
-
-Kompakt badge som viser neste avgang. Fargen skifter automatisk: teal (> 5 min), oransje (2–5 min), rød (< 2 min).
-
-![Mushroom badge](custom_components/ha_entur_skyss/docs/dashboard_badge.png)
-
-Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjengelig i HACS).
-
-```yaml
-type: custom:mushroom-template-badge
-icon: mdi:bus
-color: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d %}
-    {% set m = d[0].minutes %}
-    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
-  {% endif %}
-label: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d %}Linje {{ d[0].line }}{% endif %}
-content: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d %}{{ d[0].minutes }} min{% endif %}
-```
-
-#### Mushroom template-kort
-
-Viser de neste to avgangene med fargeindikator.
-
-![Mushroom-kort](custom_components/ha_entur_skyss/docs/dashboard_card.png)
-
-Krever [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (tilgjengelig i HACS).
-
-```yaml
-type: custom:mushroom-template-card
-entity: sensor.entur_bergen_busstasjon
-primary: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d %}Linje {{ d[0].line }} → {{ d[0].destination }}{% endif %}
-secondary: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d and d|length > 1 %}
-    {{ d[0].minutes }} min · Neste: linje {{ d[1].line }} om {{ d[1].minutes }} min
-  {% endif %}
-icon: mdi:bus-clock
-icon_color: >
-  {% set d = state_attr('sensor.entur_bergen_busstasjon', 'departures') %}
-  {% if d %}
-    {% set m = d[0].minutes %}
-    {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
-  {% endif %}
-```
-
----
-
-## 🇬🇧 English
-
 Home Assistant integration for real-time departures via the [Entur](https://entur.no) API. Developed and tested with [Skyss](https://www.skyss.no) in Bergen, but works with any Norwegian stop in the Entur network.
 
 ### Features
@@ -156,6 +11,7 @@ Home Assistant integration for real-time departures via the [Entur](https://entu
 - Automatically fetches stop name from the Entur API
 - Updates every 45 seconds (as recommended by Entur)
 - Supports multiple stops — add as many as you need
+- Display name and number of departures can be changed later without deleting the integration
 
 ### Related integrations
 
@@ -206,6 +62,10 @@ Valid ID formats:
 **Full stops** can be found at [entur.no](https://entur.no) or [stoppested.entur.org](https://stoppested.entur.org). The NSR ID always starts with `NSR:StopPlace:`.
 
 **Platform IDs (quay)** can be found by looking up the stop at [stoppested.entur.org](https://stoppested.entur.org), selecting the correct platform, and copying the quay ID (starts with `NSR:Quay:` or `SKY:Quay:`).
+
+#### Changing settings
+
+Display name and number of departures can be changed at any time without deleting the integration: go to **Settings → Devices & Services → Entur Skyss**, click the stop you want to change, and select **Configure**. The stop/quay ID itself cannot be changed here — to monitor a different stop, add a new integration instance.
 
 ### Dashboard cards
 

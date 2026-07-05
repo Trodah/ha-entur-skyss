@@ -8,6 +8,7 @@ import aiohttp
 import voluptuous as vol
 
 from homeassistant import config_entries
+from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 
 from .const import (
@@ -68,6 +69,14 @@ class EnturSkyssConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> EnturSkyssOptionsFlow:
+        """Create the options flow."""
+        return EnturSkyssOptionsFlow(config_entry)
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
@@ -119,3 +128,44 @@ class EnturSkyssConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=schema,
             errors=errors,
         )
+
+
+class EnturSkyssOptionsFlow(config_entries.OptionsFlow):
+    """Handle options for an existing Entur Skyss entry."""
+
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        """Initialize the options flow."""
+        self.config_entry = config_entry
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage the options."""
+        if user_input is not None:
+            stop_name = user_input.get(CONF_STOP_NAME, "").strip()
+            if not stop_name:
+                stop_name = self.config_entry.data.get(
+                    CONF_STOP_NAME, self.config_entry.data[CONF_STOP_ID]
+                )
+            user_input[CONF_STOP_NAME] = stop_name
+            return self.async_create_entry(title="", data=user_input)
+
+        current_name = self.config_entry.options.get(
+            CONF_STOP_NAME,
+            self.config_entry.data.get(CONF_STOP_NAME, ""),
+        )
+        current_max_departures = self.config_entry.options.get(
+            CONF_MAX_DEPARTURES,
+            self.config_entry.data.get(CONF_MAX_DEPARTURES, DEFAULT_MAX_DEPARTURES),
+        )
+
+        schema = vol.Schema(
+            {
+                vol.Optional(CONF_STOP_NAME, default=current_name): str,
+                vol.Optional(
+                    CONF_MAX_DEPARTURES, default=current_max_departures
+                ): vol.All(int, vol.Range(min=1, max=20)),
+            }
+        )
+
+        return self.async_show_form(step_id="init", data_schema=schema)

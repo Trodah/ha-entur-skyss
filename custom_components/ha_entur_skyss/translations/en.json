@@ -19,5 +19,17 @@
     "abort": {
       "already_configured": "This stop is already configured."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Update settings",
+        "description": "Update the display name or number of departures for this stop. The stop ID cannot be changed here — add a new integration to monitor a different stop.",
+        "data": {
+          "stop_name": "Display name (optional)",
+          "max_departures": "Number of departures to show"
+        }
+      }
+    }
   }
 }

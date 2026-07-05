@@ -19,9 +19,9 @@ To test locally, copy `custom_components/ha_entur_skyss/` into the `custom_compo
 
 The integration is a minimal single-platform (sensor) component with no coordinator:
 
-- `__init__.py` — sets up and tears down config entries, forwards to the `sensor` platform
-- `config_flow.py` — UI-driven setup; validates the stop/quay ID against the Entur API before creating the entry
-- `sensor.py` — `EnturSkysSensor` fetches data directly in `async_update` (no DataUpdateCoordinator); runs every 45 seconds per Entur's recommendation
+- `__init__.py` — sets up and tears down config entries, forwards to the `sensor` platform; registers an update listener that reloads the entry when options change
+- `config_flow.py` — UI-driven setup; validates the stop/quay ID against the Entur API before creating the entry. Also provides `EnturSkyssOptionsFlow`, which lets the user edit display name and max departures after setup without deleting the entry (the stop/quay ID itself is fixed at creation and not editable via options, since it's tied to the entry's `unique_id`)
+- `sensor.py` — `EnturSkysSensor` fetches data directly in `async_update` (no DataUpdateCoordinator); runs every 45 seconds per Entur's recommendation. Reads `stop_name`/`max_departures` from `entry.options` first, falling back to `entry.data`
 - `const.py` — all constants including API URL, client name, and config keys
 
 ## Stop ID types
