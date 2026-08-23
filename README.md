@@ -140,6 +140,34 @@ icon_color: >
   {% endif %}
 ```
 
+### Troubleshooting
+
+**"Invalid ID" error when adding the integration**
+The stop/quay ID must start with `NSR:StopPlace:`, `NSR:Quay:` or `SKY:Quay:`. Check for typos or extra spaces.
+
+**"Stop not found"**
+The ID is correctly formatted but doesn't exist in Entur's database. Look it up again at [stoppested.entur.org](https://stoppested.entur.org) to confirm it's correct.
+
+**"Cannot connect to Entur API"**
+Home Assistant couldn't reach `api.entur.io` while validating the ID. Check your internet connection and DNS, then try again — this is usually transient.
+
+**Sensor shows "unknown" or no departures**
+1. Check **Settings → System → Logs** for messages from `custom_components.ha_entur_skyss`.
+2. `No stop data for <id>` — the stop/quay ID may no longer be valid, or the API returned nothing for it.
+3. `Entur API error: <status>` or `Connection error to Entur API` — a temporary API/network issue; the sensor will retry on the next update (every 45 seconds).
+4. If departures are empty outside of these errors, the stop may simply have no scheduled departures at the moment (e.g. late night).
+
+**Enable debug logging**
+
+Add this to `configuration.yaml` and restart Home Assistant:
+
+```yaml
+logger:
+  default: warning
+  logs:
+    custom_components.ha_entur_skyss: debug
+```
+
 ---
 
 ## License
