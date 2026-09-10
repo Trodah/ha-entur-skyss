@@ -1,5 +1,7 @@
 # ha-entur-skyss
 
+> **På norsk:** Dette er en Home Assistant-integrasjon som viser sanntidsavganger fra Entur-API-et. Den er utviklet og testet med Skyss i Bergen, men fungerer for alle norske stopp i Entur-nettverket. Installeres via HACS eller manuelt, og støtter både hele stoppesteder og enkelte plattformer (quay).
+
 Home Assistant integration for real-time departures via the [Entur](https://entur.no) API. Developed and tested with [Skyss](https://www.skyss.no) in Bergen, but works with any Norwegian stop in the Entur network.
 
 ### Features
