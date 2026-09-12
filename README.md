@@ -1,6 +1,6 @@
 # ha-entur-skyss
 
-> **På norsk:** Dette er en Home Assistant-integrasjon som viser sanntidsavganger fra Entur-API-et. Den er utviklet og testet med Skyss i Bergen, men fungerer for alle norske stopp i Entur-nettverket. Installeres via HACS eller manuelt, og støtter både hele stoppesteder og enkelte plattformer (quay).
+> **🇳🇴 Norsk oppsummering:** Denne Home Assistant-integrasjonen viser sanntids avgangstider fra [Entur](https://entur.no) sitt API. Utviklet og testet med [Skyss](https://www.skyss.no) i Bergen, men fungerer med alle norske holdeplasser i Entur-nettverket. Installeres enkelt via HACS med et moderne UI-oppsett (ingen YAML nødvendig for selve integrasjonen), og viser linjenummer, destinasjon og minutter til avgang — oppdatert hvert 45. sekund. Se seksjonen [Template sensors](#template-sensors) lenger ned for hvordan du kan lage kombinerte sensorer for dashboard eller talemeldinger.
 
 Home Assistant integration for real-time departures via the [Entur](https://entur.no) API. Developed and tested with [Skyss](https://www.skyss.no) in Bergen, but works with any Norwegian stop in the Entur network.
 
@@ -141,6 +141,55 @@ icon_color: >
     {% if m <= 2 %}red{% elif m <= 5 %}orange{% else %}teal{% endif %}
   {% endif %}
 ```
+
+#### Mushroom picture card (with template sensors)
+
+Compact card with a custom picture, pairs well with the [template sensors](#template-sensors) below — combines the next two departures into one readable line.
+
+![Mushroom picture card](custom_components/ha_entur_skyss/docs/entur_skyss.png)
+
+Requires [Mushroom Cards](https://github.com/piitaya/lovelace-mushroom) (available in HACS). Replace `entity` with your own template sensor, and `picture` with a path to your own image under `config/www/` (e.g. a stop or bus company logo — the Skyss icon above is available at [`docs/entur_skyss.png`](custom_components/ha_entur_skyss/docs/entur_skyss.png), copy it to `config/www/pictures/skyss.png` in your HA install).
+
+```yaml
+type: custom:mushroom-template-card
+entity: sensor.neste_buss_mot_byen
+primary: Neste buss mot byen
+secondary: '{{ states(''sensor.neste_buss_mot_byen'') }}'
+picture: /local/pictures/skyss.png
+multiline_secondary: true
+vertical: true
+grid_options:
+  columns: 6
+  rows: auto
+```
+
+### Template sensors
+
+You can combine multiple stop sensors into a single, human-readable template sensor — useful for a compact dashboard line or a voice announcement. Add this to your `templates.yaml` (or under `template:` in `configuration.yaml`), replacing the entity IDs and `unique_id` values with your own:
+
+```yaml
+- sensor:
+    # ENTUR SKYSS INTEGRASJON
+    - name: "Neste buss fra Holdeplass 1"
+      unique_id: "REPLACE-WITH-YOUR-OWN-UUID"
+      state: >
+        {% set d = state_attr('sensor.entur_holdeplass_1', 'departures') %}
+        {% if d %}
+        Linje {{ d[0].line }} mot {{ d[0].destination }} om {{ d[0].minutes }} min (kl. {{ d[0].departure_time[11:16] }}).
+        Neste: linje {{ d[1].line }} mot {{ d[1].destination }} om {{ d[1].minutes }} min.
+        {% endif %}
+
+    - name: "Neste buss fra Holdeplass 2"
+      unique_id: "REPLACE-WITH-YOUR-OWN-UUID"
+      state: >
+        {% set d = state_attr('sensor.entur_holdeplass_2', 'departures') %}
+        {% if d %}
+        Linje {{ d[0].line }} mot {{ d[0].destination }} om {{ d[0].minutes }} min (kl. {{ d[0].departure_time[11:16] }}).
+        Neste: linje {{ d[1].line }} mot {{ d[1].destination }} om {{ d[1].minutes }} min.
+        {% endif %}
+```
+
+> **Tip:** Generate a fresh UUID for each `unique_id` (e.g. `uuidgen` on Linux/macOS, or any online UUID generator) — it must be unique across your whole Home Assistant instance. Replace `sensor.entur_holdeplass_1` / `sensor.entur_holdeplass_2` with the actual entity IDs of your Entur Skyss sensors (find them under **Developer Tools → States**).
 
 ### Troubleshooting
 
